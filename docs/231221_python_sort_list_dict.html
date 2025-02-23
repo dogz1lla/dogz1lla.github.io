@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html><head><title>How to sort a list of dictionaries in python</title><link href="resources/public/css/styles.css" rel="stylesheet" type="text/css"><link href="https://unpkg.com/@highlightjs/cdn-assets@11.9.0/styles/github-dark.css" rel="stylesheet" type="text/css"><script src="https://unpkg.com/@highlightjs/cdn-assets@11.9.0/highlight.min.js" type="text/javascript"></script><script src="https://unpkg.com/@highlightjs/cdn-assets@11.9.0/languages/clojure.min.js" type="text/javascript"></script><script src="https://unpkg.com/@highlightjs/cdn-assets@11.9.0/languages/python.min.js" type="text/javascript"></script><script src="https://unpkg.com/@highlightjs/cdn-assets@11.9.0/languages/bash.min.js" type="text/javascript"></script></head><body id="title-screen-body"><script>hljs.highlightAll();</script><div class="row"><div class="column left"><img class="avatar" src="resources/public/imgs/pixelz1lla.jpg"><p>Welcome to dogz1lla's lair</p><p><a href="http://github.com/dogz1lla">my github</a></p><p>If you find information on this website helpful/interesting/enjoyable consider donating!</p><p>(all donations are non-refundable!)</p><p> My monero (XMR) wallet:</p><img class="monero-qr" src="resources/public/imgs/website_address.png"></div><div class="column center"><div id="article-page"><div id="header-links">[ <a href="https://dogz1lla.github.io//index.html">Title page</a> | <a href="https://dogz1lla.github.io//home.html">List of articles</a> ]</div><h1>How to sort a list of dictionaries in python</h1><p>Ever needed to sort a table in pandas over several columns? It is straighforward to do using <i>.sort_values</i> method.  But what if you want to sort a list of vanilla python dictionaries by one or  more keys? This can be conveniently done using standard python library.</p><h2><i>Sorted</i> is your friend</h2><p><a href="https://docs.python.org/3/library/functions.html#sorted">sorted</a> is part of  standard python library that allows to sort iterables. One can specify what the elements of the iterable should be sorted by using  <i>key</i> argument of <i>sorted</i>.</p><h2>Example data</h2><p>Here is a hypothetical list of dictionaries we would like to sort. It is a collection of user data, some of the entries have a placeholder for the  name field (&quot;John Doe&quot;):</p><pre><code class="python">data = [
+    dict(name=&quot;Bruce Wayne&quot;, age=32), 
+    dict(name=&quot;Tony Stark&quot;, age=38), 
+    dict(name=&quot;John Doe&quot;, age=42), 
+    dict(name=&quot;John Doe&quot;, age=27), 
+]
+</code></pre><p></p><h2>Sorting function</h2><p>Lets create a function that takes a list of dictionaries to sort and an iterable  that contains keys of each dictionary in the order in which we want to  prioritize the sorting:</p><pre><code class="python">def sort_list_dict(data: list[dict], *keys) -&gt; list[dict]:
+    sorting_fn = lambda d: tuple([d[k] for k in keys])
+    return sorted(data, key=sorting_fn)
+</code></pre><p></p><p>The secret sauce is to use an anonymous function that takes a dictionary and  returns a /tuple/ of values corresponding to the desired keys.</p><h2>Full example</h2><pre><code class="python">def sort_list_dict(data: list[dict], *keys) -&gt; list[dict]:
+    sorting_fn = lambda d: tuple([d[k] for k in keys])
+    return sorted(data, key=sorting_fn)
+
+def test():
+    data = [
+        dict(name=&quot;Bruce Wayne&quot;, age=32), 
+        dict(name=&quot;Tony Stark&quot;, age=38), 
+        dict(name=&quot;John Doe&quot;, age=42), 
+        dict(name=&quot;John Doe&quot;, age=27), 
+    ]
+    print(f&quot;Initially: {data}&quot;)
+    keys = (&quot;name&quot;, )
+    sorted_data = sort_list_dict(data, *keys)
+    print(f&quot;Sorted by name: {sorted_data}&quot;)
+    keys = (&quot;name&quot;, &quot;age&quot;)
+    sorted_data = sort_list_dict(data, *keys)
+    print(f&quot;Sorted by name and age: {sorted_data}&quot;)
+
+def main():
+    test()
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre><p>Resulting output would look something like this:</p><pre><code class="bash"># initially:
+[
+  {'name': 'Bruce Wayne', 'age': 32},
+  {'name': 'Tony Stark', 'age': 38},
+  {'name': 'John Doe', 'age': 42},
+  {'name': 'John Doe', 'age': 27},
+]
+
+# sorted by name:
+[
+  {'name': 'Bruce Wayne', 'age': 32},
+  {'name': 'John Doe', 'age': 42},
+  {'name': 'John Doe', 'age': 27},
+  {'name': 'Tony Stark', 'age': 38},
+]
+
+# sorted by name and age:
+[
+  {'name': 'Bruce Wayne', 'age': 32},
+  {'name': 'John Doe', 'age': 27},
+  {'name': 'John Doe', 'age': 42},
+  {'name': 'Tony Stark', 'age': 38},
+]
+</code></pre><p></p></div></div></div></body></html>
